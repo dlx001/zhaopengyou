@@ -1,32 +1,18 @@
 import socketIO from "socket.io-client";
 import { useState, useEffect } from "react";
-const socket = socketIO.connect("http://localhost:4000");
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import Home from "./Pages/Home";
+import Lobby from "./Pages/Lobby";
+//const socket = socketIO.connect("http://localhost:4000");
 
 function App() {
-  const [messageTest, setMessages] = useState([]);
-  const [userId, setUserId] = useState(null);
-  useEffect(() => {
-    socket.on("message", (message) => {
-      setMessages((prevMessages) => [...prevMessages, message]);
-    });
-    socket.on("yourId", (id) => {
-      setUserId(id);
-    });
-    socket.emit("join", roomNum);
-  }, []);
-
   return (
-    <div>
-      <p>Hello World!</p>
-      {userId && <p>Your ID: {userId}</p>}
-      <button>generate Code</button>
-      <p>your code is {roomNum}</p>
-      <ul>
-        {messageTest.map((message, index) => (
-          <li key={index}>{message}</li>
-        ))}
-      </ul>
-    </div>
+    <Router>
+      <Routes>
+        <Route exact path="/" element={<Home></Home>} />
+        <Route path="/lobby/:id" element={<Lobby></Lobby>} />
+      </Routes>
+    </Router>
   );
 }
 
