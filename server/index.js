@@ -31,11 +31,7 @@ socketIO.on("connection", (socket) => {
   });
 });
 
-app.get("/api", (req, res) => {
-  res.json({
-    message: "Hello world",
-  });
-});
+app.get("/lobby/:id", (req, res) => {});
 
 http.listen(PORT, () => {
   console.log(`Server listening on ${PORT}`);
