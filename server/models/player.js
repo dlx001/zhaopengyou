@@ -5,7 +5,7 @@ class Player {
     this.id = id;
   }
   onCreate() {
-    this.socket.emit("yourId", id);
+    this.socket.emit("yourId", this.id);
   }
 }
 

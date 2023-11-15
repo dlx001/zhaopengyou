@@ -14,6 +14,18 @@ const socketIO = require("socket.io")(http, {
   },
 });
 
+const { Pool } = require("pg");
+const client = new Pool({
+  user: "postgres",
+  host: "localhost",
+  database: "postgres",
+  password: "password",
+  port: 5432,
+});
+client.connect(function (err) {
+  if (err) throw err;
+  console.log("Connected!");
+});
 const Game = require("./models/game");
 const Player = require("./models/player");
 let players = [];
@@ -22,6 +34,9 @@ socketIO.on("connection", (socket) => {
   console.log(`${socket.id} user just connected!`);
   socket.on("join", (room) => {
     socket.join(room);
+  });
+  socket.on("connectionData", (data) => {
+    console.log(data.name);
   });
   let newPlayer = new Player(socket.id, socket);
   newPlayer.onCreate();
