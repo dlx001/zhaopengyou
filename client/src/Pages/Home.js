@@ -7,8 +7,7 @@ const {
   animals,
 } = require("unique-names-generator");
 
-const Home = () => {
-  let roomId = null;
+const Home = ({ socket, setHome, setLobby, setRoomID, isLobby }) => {
   let [name, setName] = useState("");
   const handleInputChange = (event) => {
     setName(event.target.value);
@@ -22,23 +21,23 @@ const Home = () => {
       let randomIndex = Math.floor(Math.random() * alphabet.length);
       num += alphabet[randomIndex];
     }
-    roomId = num;
+    setRoomID(num);
+    console.log(num);
   };
   let createGame = () => {
-    const socket = io("localhost:4000");
-    socket.on("connect", async () => {
-      if (name === "") {
-        name = uniqueNamesGenerator({
-          dictionaries: [adjectives, colors, animals],
-        });
-      }
-      socket.emit("connectionData", { name });
-      generateCode();
-      window.location.href = `./lobby/${roomId}`;
-    });
-    socket.on("yourId", (data) => {
-      console.log("playerId was " + data);
-    });
+    if (name === "") {
+      name = uniqueNamesGenerator({
+        dictionaries: [adjectives, colors, animals],
+      });
+    }
+    socket.emit("connectionData", { name });
+    generateCode();
+    setHome(false);
+    setLobby(true);
+
+    // socket.on("yourId", (data) => {
+    //   console.log("playerId was " + data);
+    // });
   };
   return (
     <div>

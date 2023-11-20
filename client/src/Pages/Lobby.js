@@ -1,9 +1,17 @@
 import React from "react";
-import { useParams } from "react-router-dom";
 
-const Lobby = () => {
-  const { id } = useParams();
-  return <p>This is the Lobby for {id}</p>;
+const Lobby = ({ roomId, setHome, setLobby, setRoomID }) => {
+  let returnHome = () => {
+    setHome(true);
+    setLobby(false);
+    setRoomID(null);
+  };
+  return (
+    <div>
+      <p>This is the Lobby for {roomId}</p>
+      <button onClick={returnHome}>return Home</button>
+    </div>
+  );
 };
 
 export default Lobby;
