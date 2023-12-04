@@ -1,4 +1,3 @@
-// server.js
 const express = require("express");
 const app = express();
 const PORT = 4000;
@@ -26,27 +25,30 @@ client.connect(function (err) {
   if (err) throw err;
   console.log("Connected!");
 });
-const Game = require("./models/game");
+
 const Player = require("./models/player");
 let players = [];
 
 socketIO.on("connection", (socket) => {
   console.log(`${socket.id} user just connected!`);
-  socket.on("join", (room) => {
-    socket.join(room);
-  });
+
   socket.on("connectionData", (data) => {
     console.log(data.name);
+    socket.join(data.room);
+    let newPlayer = new Player(socket.id, data.name);
+    players.push(newPlayer);
+    console.log(players);
+    socketIO.to(data.room).emit("joinGame", players);
   });
-  let newPlayer = new Player(socket.id, socket);
-  newPlayer.onCreate();
-  players.push(newPlayer);
+
   socket.on("disconnect", () => {
     console.log("A user disconnected");
+
+    players = players.filter((player) => player.id !== socket.id);
+
+    socketIO.to(socket.rooms.values().next().value).emit("joinGame", players);
   });
 });
-
-app.get("/lobby/:id", (req, res) => {});
 
 http.listen(PORT, () => {
   console.log(`Server listening on ${PORT}`);

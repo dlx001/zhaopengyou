@@ -7,12 +7,15 @@ const {
   animals,
 } = require("unique-names-generator");
 
-const Home = ({ socket, setHome, setLobby, setRoomID, isLobby }) => {
+const Home = ({ socket, setHome, setLobby, setRoomID, isLobby, roomId }) => {
   let [name, setName] = useState("");
   const handleInputChange = (event) => {
     setName(event.target.value);
   };
-
+  const handleRoomChange = (event) => {
+    setRoomID(event.target.value);
+    console.log(roomId);
+  };
   let generateCode = () => {
     let num = new Date().getMilliseconds().toString();
     const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -22,7 +25,6 @@ const Home = ({ socket, setHome, setLobby, setRoomID, isLobby }) => {
       num += alphabet[randomIndex];
     }
     setRoomID(num);
-    console.log(num);
   };
   let createGame = () => {
     if (name === "") {
@@ -30,7 +32,7 @@ const Home = ({ socket, setHome, setLobby, setRoomID, isLobby }) => {
         dictionaries: [adjectives, colors, animals],
       });
     }
-    socket.emit("connectionData", { name });
+    socket.emit("connectionData", { name, roomId });
     generateCode();
     setHome(false);
     setLobby(true);
@@ -38,6 +40,18 @@ const Home = ({ socket, setHome, setLobby, setRoomID, isLobby }) => {
     // socket.on("yourId", (data) => {
     //   console.log("playerId was " + data);
     // });
+  };
+  let joinGame = () => {
+    if (roomId === "") {
+      return;
+    } else if (name === "") {
+      name = uniqueNamesGenerator({
+        dictionaries: [adjectives, colors, animals],
+      });
+    }
+    socket.emit("connectionData", { name, roomId });
+    setHome(false);
+    setLobby(true);
   };
   return (
     <div>
@@ -48,8 +62,8 @@ const Home = ({ socket, setHome, setLobby, setRoomID, isLobby }) => {
       <div>
         <p>Enter a Friends Code</p>
         <form>
-          <input></input>
-          <button>Enter</button>
+          <input type="text" value={roomId} onChange={handleRoomChange}></input>
+          <button onClick={joinGame}>Enter</button>
         </form>
       </div>
     </div>

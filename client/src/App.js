@@ -8,6 +8,7 @@ function App() {
   const [isHome, setHome] = useState(true);
   const [isLobby, setLobby] = useState(false);
   const [roomId, setRoomID] = useState("");
+  const [name, setName] = useState("");
   return (
     <div>
       {isHome && (
@@ -17,6 +18,9 @@ function App() {
           setLobby={setLobby}
           setRoomID={setRoomID}
           isLobby={isLobby}
+          roomId={roomId}
+          name={name}
+          setName={setName}
         ></Home>
       )}
       {isLobby && (
@@ -26,6 +30,8 @@ function App() {
           setLobby={setLobby}
           setRoomID={setRoomID}
           roomId={roomId}
+          name={name}
+          setName={setName}
         ></Lobby>
       )}
     </div>
