@@ -39,6 +39,13 @@ socketIO.on("connection", (socket) => {
     players.push(newPlayer);
     console.log(players);
     socketIO.to(data.room).emit("joinGame", players);
+    socket.on("startGame", ({ roomId }) => {
+      socketIO.to(roomId).emit("gameStarted");
+    });
+    socket.on("joinGame", () => {
+      console.log("game started");
+      let newGame = new Game(data.room, players);
+    });
   });
 
   socket.on("disconnect", () => {
